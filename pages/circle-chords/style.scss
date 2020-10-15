@@ -1,12 +1,22 @@
-$mainColor: #495362;
+$mainColor: lighten(#495362, 20%);
+$dimmedColor: #495362;
 $bgColor: #212934;
 $highlightColor: #ECEEEF;
+$currentNoteColor: darken($bgColor, 10%);
+
 $mobileCut: 600px;
+
 $chordColors: (
-	"maj": red,
-	"min": blue,
+	"maj": #F24949,
+	"min": #056CF2,
 	"dim": orange,
-	"aug": green
+	"aug": green,
+	"maj7": #F288B9,
+	"7": #04BF9D,
+	"minmaj7": #F216A5,
+	"m7": #6B71F2,
+	"m7b5": #447322,
+	"dim7": #5C3A8C
 );
 
 body,
@@ -27,7 +37,6 @@ html {
 
 * {
 	box-sizing: inherit;
-
 	&:after,
 	&:before {
 		box-sizing: inherit;
@@ -71,7 +80,6 @@ footer {
 	grid-template-columns: repeat(auto-fill, minmax(20vw, 1fr));
 	@media (max-width: $mobileCut) {
 		display: block;
-
 		.circle figure svg {
 			width: 100%;
 		}
@@ -100,28 +108,45 @@ footer {
 				margin-bottom: 1rem;
 
 				.center {
-					fill: $mainColor;
+					fill: $dimmedColor;
+					transform-origin: 50% 50%;
+					transition: transform .2s ease-in-out;
+				}
+
+				&:hover {
+					cursor: pointer;
+					.center {
+						transform: scale(20);
+					}
 				}
 
 				.circle {
 					fill: none;
-					stroke: $mainColor;
+					stroke: $dimmedColor;
 				}
 
 				.labels {
-					fill: $mainColor;
-
-					text.selected {
-						fill: $highlightColor;
+					fill: $dimmedColor;
+					text {
+						transition: fill .2s ease-in-out;
+						&.selected {
+							fill: $highlightColor;
+						}
+						&.is-current {
+							fill: $currentNoteColor;
+						}
 					}
 				}
 
 				.points {
 					circle {
-						fill: $mainColor;
-
+						fill: $dimmedColor;
+						transition: fill .2s ease-in-out;
 						&.selected {
 							fill: $highlightColor;
+						}
+						&.is-current {
+							fill: $currentNoteColor;
 						}
 					}
 				}
@@ -139,7 +164,11 @@ footer {
   top: 0;
   right: 0;
   svg {
-    fill: $mainColor;
+    fill: $dimmedColor;
+		transition: fill .3s ease-in-out;
+		&:hover {
+			fill: $highlightColor;
+		}
     .octo-arm,
     .octo-body {
       fill: $bgColor;

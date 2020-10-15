@@ -11,10 +11,18 @@ import {
   polygonStroke,
   bpm
 } from './data.js';
+
 import './style.scss';
 
 const noteInChord = function noteInChord({ note, enharmonic, chord }) {
   return chord.indexOf(note) > -1 || chord.indexOf(enharmonic) > -1
+}
+
+const noteEquals = function noteEquals(x, y) {
+  const defaultNote = notes.find(
+    ({ note, enharmonic }) => y === note || y === enharmonic
+  );
+  return defaultNote.note === x;
 }
 
 const renderCircle = function renderCircle({
@@ -56,7 +64,7 @@ const renderCircle = function renderCircle({
     .attr('cy', size / 2)
     .attr('r', size / 2 - padding);
 
-  svg.append('circle')
+  const center = svg.append('circle')
     .attr('class', 'center')
     .attr('cx', size / 2)
     .attr('cy', size / 2)
@@ -75,7 +83,10 @@ const renderCircle = function renderCircle({
     .append('circle')
       .attr('cx', (d, i) => getX(i))
       .attr('cy', (d, i) => getY(i))
-      .attr('class', (d) => noteInChord({ ...d, chord: chordNotes}) ? 'selected' : '')
+      .attr('class',
+        d => noteInChord({ ...d, chord: chordNotes}) ? 'selected' : ''
+      )
+      .attr('data-note', d => d.note)
       .attr('r', pointRadius);
 
   const labelsGroup = svg.append('g')
@@ -90,7 +101,10 @@ const renderCircle = function renderCircle({
       .attr('x', (d, i) => getX(i, textPadding))
       .attr('y', (d, i) => getY(i, textPadding))
       .attr('dy', 5)
-      .attr('class', (d) => noteInChord({ ...d, chord: chordNotes }) ? 'selected' : '')
+      .attr('class',
+        d => noteInChord({ ...d, chord: chordNotes}) ? 'selected' : ''
+      )
+      .attr('data-note', d => d.note)
       .text(
         d => showFlats && d.note.indexOf('#') > -1 && d.enharmonic ? d.enharmonic : d.note
       );
@@ -105,35 +119,47 @@ document.addEventListener('DOMContentLoaded', () => {
   Tone.Transport.bpm.value = bpm;
   const synth = new Tone.Synth().toDestination();
 
-  document.querySelectorAll('.circle').forEach((el) => {
+  let sequence = null;
+  let started = false;
+  let playingCircleIndex = -1;
+
+  const $circles = document.querySelectorAll('.circle');
+
+  $circles.forEach((el, i) => {
     const name = el.dataset.name;
     const chordNotes = el.dataset.chordNotes.split(',');
     renderCircle({
       chordNotes,
       element: el.querySelector('figure')
     });
-    el.addEventListener('click', () => {
 
+    const $labels = el.querySelectorAll('[data-note]');
+
+    el.addEventListener('click', () => {
+      if (!started) {
+        Tone.start();
+        started = true;
+      }
+      if (sequence) {
+        sequence.stop();
+        sequence.clear();
+      }
+      sequence = new Tone.Sequence((time, note) => {
+        synth.triggerAttackRelease(`${note}3`, '16n');
+        $labels.forEach(el => el.classList.toggle('is-current', noteEquals(el.dataset.note, note)));
+      }, chordNotes).start(0);
+
+      $circles.forEach(el => el.classList.remove('is-playing'));
+
+      if (playingCircleIndex === i) {
+        Tone.Transport.stop();
+        playingCircleIndex = -1;
+        $labels.forEach(el => el.classList.remove('is-current'));
+        return;
+      }
+      el.classList.add('is-playing');
+      Tone.Transport.start();
+      playingCircleIndex = i;
     });
   });
-
-  // const seq = new Tone.Sequence((time, note) => {
-  //   synth.triggerAttackRelease(`${note}3`, '16n');
-  // }, points).start(0);
-  //
-  // let isPlaying = false;
-  // let started = false;
-  // let currentNote = 0;
-  // document.querySelector('.playback-toggle').addEventListener('click', () => {
-  //   isPlaying = !isPlaying;
-  //   if (!started ) {
-  //     Tone.start();
-  //     started = true;
-  //   }
-  //   if (isPlaying) {
-  //     Tone.Transport.start();
-  //   } else {
-  //     Tone.Transport.stop();
-  //   }
-  // });
 });
