@@ -7,13 +7,13 @@ const circleChords = require('./pages/circle-chords/data');
 
 const targetPath = path.resolve(__dirname, 'dist');
 
-const pkg = require('./package.json');
+const { repository } = require('./package.json');
 const homepage = 'https://www.diegocaponera.com/';
 
 const renderFooter = (url) => {
   return `
   <footer>
-    <p>(c) 2020 <a href="${url}">mwlabs</a>.</p>
+    <p>(c) 2020. Made with 💛 @ <a href="${url}">mwlabs</a>.</p>
   </footer>
   `;
 }
@@ -57,7 +57,7 @@ module.exports = {
       template: 'pages/circle-chords/index.ejs',
       templateParameters: {
         footer: renderFooter(homepage),
-        badge: renderBadge('#'),
+        badge: renderBadge(repository.url),
         ...circleChords
       }
     }),

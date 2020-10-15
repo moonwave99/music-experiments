@@ -1,9 +1,14 @@
 {
-	"name": "@moonwave99/music-theory",
+	"name": "@moonwave99/music-experiments",
 	"version": "0.0.1",
-	"description": "Music theory visualizations",
+	"private": true,
+	"description": "Source code for my collection of music related visualisations and experiments.",
 	"scripts": {
 		"start": "webpack-dev-server"
+	},
+	"repository": {
+	  "type": "git",
+	  "url": "https://github.com/moonwave99/music-experiments"
 	},
 	"keywords": [
 		"music",
