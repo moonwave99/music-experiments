@@ -1,0 +1,176 @@
+$mainColor: #495362;
+$bgColor: #212934;
+$highlightColor: #ECEEEF;
+$mobileCut: 600px;
+$chordColors: (
+	"maj": red,
+	"min": blue,
+	"dim": orange,
+	"aug": green
+);
+
+body,
+html {
+	font-family: 'Futura', 'Arial', sans-serif;
+	font-size: 16px;
+	margin: 0;
+	padding: 0;
+	-webkit-font-smoothing: antialiased;
+	background-color: $bgColor;
+	color: $mainColor;
+}
+
+html {
+	box-sizing: border-box;
+	min-height: 100vh;
+}
+
+* {
+	box-sizing: inherit;
+
+	&:after,
+	&:before {
+		box-sizing: inherit;
+	}
+}
+
+a {
+	color: $highlightColor;
+	text-decoration: none;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+main {
+	padding: 0 3rem;
+}
+
+header {
+	h1 {
+		font-size: 2rem;
+		line-height: 3rem;
+		margin: 3rem 0;
+		color: $highlightColor;
+	}
+}
+
+footer {
+	p {
+		color: $mainColor;
+		margin: 3rem 0;
+		text-align: right;
+	}
+}
+
+.circles {
+	margin-top: 4rem;
+	display: grid;
+	grid-gap: 4rem 2rem;
+	grid-template-columns: repeat(auto-fill, minmax(20vw, 1fr));
+	@media (max-width: $mobileCut) {
+		display: block;
+
+		.circle figure svg {
+			width: 100%;
+		}
+	}
+
+	.circle {
+		@each $name, $color in $chordColors {
+			&[data-chord-name="#{$name}"] {
+				figure svg .polygons polygon {
+					stroke: $color;
+				}
+			}
+		}
+
+		figure {
+			margin: 0;
+			text-align: center;
+
+			figcaption {
+				line-height: 2rem;
+				color: $highlightColor;
+			}
+
+			svg {
+				max-width: 100%;
+				margin-bottom: 1rem;
+
+				.center {
+					fill: $mainColor;
+				}
+
+				.circle {
+					fill: none;
+					stroke: $mainColor;
+				}
+
+				.labels {
+					fill: $mainColor;
+
+					text.selected {
+						fill: $highlightColor;
+					}
+				}
+
+				.points {
+					circle {
+						fill: $mainColor;
+
+						&.selected {
+							fill: $highlightColor;
+						}
+					}
+				}
+
+				.polygons polygon {
+					stroke: red;
+				}
+			}
+		}
+	}
+}
+
+.github-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  svg {
+    fill: $mainColor;
+    .octo-arm,
+    .octo-body {
+      fill: $bgColor;
+    }
+  }
+	&:hover .octo-arm {
+		animation: octocat-wave 560ms ease-in-out;
+	}
+	@keyframes octocat-wave {
+		0%,
+		100% {
+			transform: rotate(0);
+		}
+
+		20%,
+		60% {
+			transform: rotate(-25deg);
+		}
+
+		40%,
+		80% {
+			transform: rotate(10deg);
+		}
+	}
+	@media (max-width:500px) {
+		&:hover .octo-arm {
+			animation: none;
+		}
+
+		.octo-arm {
+			animation: octocat-wave 560ms ease-in-out;
+		}
+	}
+}

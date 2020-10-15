@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"
+	  content="width=device-width, initial-scale=1">
+	<title><%= htmlWebpackPlugin.options.title %></title>
+	<link rel="stylesheet" href="https://unpkg.com/normalize.css@8.0.1/normalize.css">
+</head>
+
+<body>
+	<main>
+		<header>
+			<h1><%= title %></h1>
+			<p><%= description %></p>
+			<%= badge %>
+		</header>
+		<section class="circles">
+		<% chords.forEach(({ name, notes }) => { %>
+			<article class="circle" data-chord-name="<%= name %>" data-chord-notes="<%= notes %>">
+				<figure>
+					<figcaption><%= `${notes[0]}${name}` %></figcaption>
+				</figure>
+			</article>
+		<% })%>
+		</section>
+		<%= footer %>
+	</main>
+</body>
+</html>
