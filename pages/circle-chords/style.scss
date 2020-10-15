@@ -52,6 +52,12 @@ a {
 	}
 }
 
+body.is-playing {
+	article.circle:not(.is-playing) {
+		opacity: .5;
+	}
+}
+
 main {
 	padding: 0 3rem;
 	@media (max-width: $mobileCut) {
@@ -95,6 +101,7 @@ footer {
 	}
 
 	.circle {
+		transition: opacity .3s ease-in-out;
 		@each $name, $color in $chordColors {
 			&[data-chord-name="#{$name}"] {
 				figure svg .polygons polygon {
@@ -107,6 +114,15 @@ footer {
 				animation: none;
 				transform: scale(10);
 				fill: $highlightColor;
+			}
+			svg {
+				.circle,
+				.points circle {
+					stroke: lighten($dimmedColor, 40%);
+				}
+				.labels {
+					fill: lighten($dimmedColor, 40%);
+				}
 			}
 		}
 
@@ -173,10 +189,6 @@ footer {
 							fill: $currentNoteColor;
 						}
 					}
-				}
-
-				.polygons polygon {
-					stroke: red;
 				}
 			}
 		}

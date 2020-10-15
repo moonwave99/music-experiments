@@ -155,8 +155,10 @@ document.addEventListener('DOMContentLoaded', () => {
         Tone.Transport.stop();
         playingCircleIndex = -1;
         $labels.forEach(el => el.classList.remove('is-current'));
+        document.body.classList.remove('is-playing');
         return;
       }
+      document.body.classList.add('is-playing');
       el.classList.add('is-playing');
       Tone.Transport.start();
       playingCircleIndex = i;
