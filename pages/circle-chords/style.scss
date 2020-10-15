@@ -129,6 +129,9 @@ footer {
 		figure {
 			margin: 0;
 			text-align: center;
+			@media (max-width: $mobileCut) {
+				margin-bottom: 4rem;
+			}
 
 			figcaption {
 				line-height: 2rem;
